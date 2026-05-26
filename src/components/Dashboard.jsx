@@ -7,7 +7,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-const API = 'http://localhost:8000';
+const API = 'https://web-a8backend-production.up.railway.app';
 
 const authHeaders = () => ({
   'Content-Type': 'application/json',

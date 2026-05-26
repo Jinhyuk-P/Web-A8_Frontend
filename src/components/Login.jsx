@@ -21,7 +21,7 @@ export default function Login({ setIsAuthenticated }) {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('http://localhost:8000/login', {
+      const res = await fetch('https://web-a8backend-production.up.railway.app/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
