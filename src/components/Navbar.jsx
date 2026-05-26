@@ -5,6 +5,7 @@ export default function Navbar({ setIsAuthenticated }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    localStorage.removeItem('token'); // Clear JWT token
     setIsAuthenticated(false);
     navigate('/login');
   };

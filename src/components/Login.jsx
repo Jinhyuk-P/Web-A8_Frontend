@@ -8,15 +8,36 @@ export default function Login({ setIsAuthenticated }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (username.trim() !== '' && password.trim() !== '') {
-      setIsAuthenticated(true);
-      navigate('/dashboard'); 
-    } else {
-      alert("Por favor, ingresa usuario y contraseña");
+    if (username.trim() === '' || password.trim() === '') {
+      setError("Por favor, ingresa usuario y contraseña");
+      return;
+    }
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch('http://localhost:8000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+      if (data.login) {
+        localStorage.setItem('token', data.token);
+        setIsAuthenticated(true);
+        navigate('/dashboard');
+      } else {
+        setError(data.msg || "Credenciales incorrectas");
+      }
+    } catch (err) {
+      setError("Error al conectar con el servidor. ¿Está corriendo el backend?");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,11 +82,17 @@ export default function Login({ setIsAuthenticated }) {
                 ),
               }}
             />
-            <Button 
+            {error && (
+              <Typography color="error" variant="body2" textAlign="center">
+                {error}
+              </Typography>
+            )}
+            <Button
               type="submit" variant="contained" color="primary" size="large" fullWidth
-              sx={{ borderRadius: 28, textTransform: 'none', fontSize: '1.1rem', py: 1.5, mt: 2 }} 
+              disabled={loading}
+              sx={{ borderRadius: 28, textTransform: 'none', fontSize: '1.1rem', py: 1.5, mt: 2 }}
             >
-              Ingresar
+              {loading ? 'Ingresando...' : 'Ingresar'}
             </Button>
           </form>
         </CardContent>

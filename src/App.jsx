@@ -5,7 +5,8 @@ import Dashboard from './components/Dashboard';
 import Navbar from './components/Navbar';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Check localStorage on startup so auth persists after page refresh
+  const [isAuthenticated, setIsAuthenticated] = useState(() => !!localStorage.getItem('token'));
 
   return (
     <Router>
